@@ -8,11 +8,18 @@ namespace UISystem.Providers
     {
         public async UniTask<T> InstantiatePrefabInactiveAsync<T>(object prefab) where T : UIEntity
         {
-            var go = Object.Instantiate( (T) prefab);
-            go.gameObject.SetActive(false);
+            var tempParentPrefab = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            tempParentPrefab.SetActive(false);
+            
+            var typedPrefab = (T) prefab;
+            var instantiatedComponent = Object.Instantiate(typedPrefab, tempParentPrefab.transform);
+            instantiatedComponent.gameObject.SetActive(false);
+            instantiatedComponent.transform.SetParent(null);
+            
+            Object.Destroy(tempParentPrefab);
             
             var taskSource = new UniTaskCompletionSource<T>();
-            taskSource.TrySetResult(go);
+            taskSource.TrySetResult(instantiatedComponent);
             return await taskSource.Task;
         }
     }

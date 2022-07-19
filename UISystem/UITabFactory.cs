@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using UISystem.History;
 using UISystem.Mediators;
 using UISystem.Providers;
@@ -9,14 +10,14 @@ namespace UISystem
 {
 	public class UITabFactory
 	{
-		Transform _parent;
-		UIHistory _history = new UIHistory();
+		[NonSerialized] Transform _parent;
+		[NonSerialized] UIHistory _history = new UIHistory();
 		protected UITabMediator UITabMediator;
 		protected IUIProvider UiProvider;
 
 		public UITabFactory(IUIProvider uiProvider, Transform parent = null, UIMediator uiMediator = null)
 		{
-			_parent = parent;
+			_parent = parent; 
 			UiProvider = uiProvider ?? new UIProvider();
 			UITabMediator = new UITabMediator(this, _history, uiMediator);
 		}
@@ -39,7 +40,12 @@ namespace UISystem
 			if (entity is UIPage uiPage)
 			{
 				uiPage.InitUITabMediator(UITabMediator);
+				entityTransform.gameObject.SetActive(true);
 				await _history.Add(uiPage);
+			}
+			else
+			{
+				entityTransform.gameObject.SetActive(true);
 			}
 
 			entity.Init(customData);

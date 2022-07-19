@@ -16,11 +16,11 @@ namespace UISystem
 		public UITabFactorySerializable(IUIProvider uiProvider, Transform parent = null,
 			UIMediator uiMediator = null) : base(uiProvider, parent, uiMediator) { }
 
-		public void Init(IUIProvider uiProvider)
+		public void Init(IUIProvider uiProvider = null)
 		{
 			InitProtected(_parent, _history);
 			
-			UiProvider = uiProvider;
+			UiProvider = uiProvider ?? new UIProvider();
 			UITabMediator = new UITabMediator(this, _history, _uiMediator);
 
 			for (int i = 0; i < _history.PagesCount; i++)
